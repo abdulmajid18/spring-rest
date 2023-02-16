@@ -1,9 +1,14 @@
 package com.rozz.sburrestdemo;
 
-import java.util.UUID;
+import java.util.*;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 public class SburRestDemoApplication {
@@ -38,4 +43,24 @@ class Coffee {
 	public void setName(String name) {
 		this.name = name;
 	}
+}
+
+@RestController
+@RequestMapping("/")
+class RestApiDemoController {
+	private List<Coffee> coffees = new ArrayList<>();
+
+	public RestApiDemoController() {
+		coffees.addAll(List.of(
+				new Coffee("Cafe Cereza"),
+				new Coffee("Cafe Ganador"),
+				new Coffee("Cafe Lareno"),
+				new Coffee("Cafe Tres Pontas")));
+	}
+
+	@GetMapping("/coffees")
+	Iterable<Coffee> getCoffees() {
+		return coffees;
+	}
+
 }

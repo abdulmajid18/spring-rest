@@ -63,4 +63,13 @@ class RestApiDemoController {
 		return coffees;
 	}
 
+	@GetMapping("/coffees/{id}")
+	Optional<Coffee> getCoffeeById(@PathVariable String id) {
+		for (Coffee c : coffees) {
+			if (c.getId().equals(id)) {
+				return Optional.of(c);
+			}
+		}
+		return Optional.empty();
+	}
 }

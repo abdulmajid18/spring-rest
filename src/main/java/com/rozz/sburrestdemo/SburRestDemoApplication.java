@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 @SpringBootApplication
 public class SburRestDemoApplication {
 
@@ -17,8 +20,10 @@ public class SburRestDemoApplication {
 
 }
 
+@Entity
 class Coffee {
-	private final String id;
+	@Id
+	private String id;
 	private String name;
 
 	public Coffee(String id, String name) {
@@ -40,6 +45,10 @@ class Coffee {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 }
 
@@ -95,4 +104,5 @@ class RestApiDemoController {
 	void deleteoffee(@PathVariable String id) {
 		coffees.removeIf(c -> c.getId().equals(id));
 	}
+
 }

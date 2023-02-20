@@ -2,21 +2,15 @@ package com.rozz.sburrestdemo;
 
 import java.util.*;
 
-import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-
 @SpringBootApplication
+@ConfigurationPropertiesScan
 public class SburRestDemoApplication {
 
 	public static void main(String[] args) {
@@ -127,6 +121,52 @@ class GreetingController {
 	@GetMapping("/coffee")
 	String getNameAndCoffee() {
 		return coffee;
+	}
+}
+
+/*
+ * Using @ConfigurationProperties for more enhancement rather than application
+ * properties
+ */
+@ConfigurationProperties(prefix = "greeting2")
+class Greeting2 {
+	private String name;
+	private String coffee;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCoffee() {
+		return coffee;
+	}
+
+	public void setCoffee(String coffee) {
+		this.coffee = coffee;
+	}
+}
+
+@RestController
+@RequestMapping("/greeting2")
+class GreetingController2 {
+	private final Greeting2 greeting2;
+
+	public GreetingController2(Greeting2 greeting2) {
+		this.greeting2 = greeting2;
+	}
+
+	@GetMapping
+	String getGreeting() {
+		return greeting2.getName();
+	}
+
+	@GetMapping("/coffee")
+	String getNameAndCoffee() {
+		return greeting2.getCoffee();
 	}
 
 }

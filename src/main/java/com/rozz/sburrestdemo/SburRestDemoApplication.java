@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 @SpringBootApplication
@@ -15,6 +16,12 @@ public class SburRestDemoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SburRestDemoApplication.class, args);
+	}
+
+	@Bean
+	@ConfigurationProperties(prefix = "droid")
+	Droid createDroid() {
+		return new Droid();
 	}
 
 }
@@ -169,4 +176,24 @@ class GreetingController2 {
 		return greeting2.getCoffee();
 	}
 
+}
+
+class Droid {
+	private String id, description;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }

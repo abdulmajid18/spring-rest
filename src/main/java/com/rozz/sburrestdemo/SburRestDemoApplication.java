@@ -2,7 +2,10 @@ package com.rozz.sburrestdemo;
 
 import java.util.*;
 
+import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.repository.CrudRepository;
@@ -48,10 +51,6 @@ class Coffee {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	// public void setId(String id) {
-	// this.id = id;
-	// }
 }
 
 // interface CoffeeRepository extends CrudRepository<Coffee, String> {
@@ -62,14 +61,6 @@ class Coffee {
 class RestApiDemoController {
 	// private final CoffeeRepository coffeeRepository;
 	private List<Coffee> coffees = new ArrayList<>();
-
-	// public RestApiDemoController(CoffeeRepository coffeeRepository) {
-	// this.coffeeRepository = coffeeRepository;
-	// this.coffeeRepository.saveAll(List.of(new Coffee("Cafe Cereza"),
-	// new Coffee("Cafe Ganador"),
-	// new Coffee("Cafe Lareno"),
-	// new Coffee("Cafe Tres Pontas")));
-	// }
 
 	public RestApiDemoController() {
 		coffees.addAll(List.of(
@@ -101,8 +92,7 @@ class RestApiDemoController {
 	}
 
 	@PutMapping("/{id}")
-	ResponseEntity<Coffee> putCoffee(@PathVariable String id,
-			@RequestBody Coffee coffee) {
+	Coffee putCoffee(@PathVariable String id, @RequestBody Coffee coffee) {
 		int coffeeIndex = -1;
 		for (Coffee c : coffees) {
 			if (c.getId().equals(id)) {
@@ -110,13 +100,33 @@ class RestApiDemoController {
 				coffees.set(coffeeIndex, coffee);
 			}
 		}
-		return (coffeeIndex == -1) ? new ResponseEntity<>(postCoffee(coffee), HttpStatus.CREATED)
-				: new ResponseEntity<>(coffee, HttpStatus.OK);
+
+		return (coffeeIndex == -1) ? postCoffee(coffee) : coffee;
 	}
 
 	@DeleteMapping("/{id}")
 	void deleteCoffee(@PathVariable String id) {
 		coffees.removeIf(c -> c.getId().equals(id));
+	}
+}
+
+@RestController
+@RequestMapping("/greeting")
+class GreetingController {
+	@Value("${greeting-name: Mirage}")
+	private String name;
+
+	@Value("${greeting-coffee: ${greeting-name} is drinking Cafe Ganador}")
+	private String coffee;
+
+	@GetMapping
+	String getGreeting() {
+		return name;
+	}
+
+	@GetMapping("/coffee")
+	String getNameAndCoffee() {
+		return coffee;
 	}
 
 }

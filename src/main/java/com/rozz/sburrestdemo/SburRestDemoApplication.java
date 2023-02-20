@@ -197,3 +197,18 @@ class Droid {
 		this.description = description;
 	}
 }
+
+@RestController
+@RequestMapping("/droid")
+class DroidController {
+	private final Droid droid;
+
+	public DroidController(Droid droid) {
+		this.droid = droid;
+	}
+
+	@GetMapping
+	Droid getDroid() {
+		return droid;
+	}
+}
